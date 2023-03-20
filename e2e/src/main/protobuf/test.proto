@@ -1,0 +1,51 @@
+syntax = "proto3";
+
+package com.testing.compat.protos;
+
+enum Color {
+    UNKNOWN = 0;
+    RED = 1;
+    GREEN = 2;
+    BLUE = 3;
+}
+
+message TestMessage {
+    string a = 1;
+    int32 b = 2;
+
+    message NestedMessage {
+      Color color = 1;
+    }
+    NestedMessage m = 3;
+}
+
+message HelloMessage {
+  TestMessage test = 1;
+  
+  repeated TestMessage tests = 2;
+
+  repeated string d = 3;
+
+  optional string f = 4;
+
+  int32 i32 = 10;
+  int64 i64 = 11;
+  string str = 12;
+  bool bl = 13;
+  float dbl = 15;
+  map<int32, string> im = 20;
+  map<int32, string> im2 = 22;
+  map<string, TestMessage> nestedMap = 21;
+}
+
+message FMessage {
+  optional int32 i32a = 1;
+  optional string f = 4;
+  optional string str = 5;
+  oneof choice {
+    HelloMessage chello = 10;
+    TestMessage ctest = 11;
+    int64 inone_of = 18;
+  }
+  map<string, string> maps = 20;
+}
