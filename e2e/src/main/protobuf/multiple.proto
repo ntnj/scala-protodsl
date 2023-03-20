@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+package com.testing.compat.protos;
+
+option java_multiple_files = true;
+
+message Testing1 {
+  int64 aa = 2;
+  repeated int32 as = 1;
+  optional sint32 ao = 6;
+
+  string bb = 3;
+  repeated string bs = 4;
+  optional string bo = 5;
+
+  Testing2 tt = 7;
+  repeated Testing2 ts = 8;
+
+  map<int64, string> mis = 9;
+  map<string, Testing2> mst = 10;
+
+  int64 i64 = 11;
+
+  float dbl = 15;
+}
+
+message Testing2 {
+  string aa = 2;
+  // string bb = 3;
+  // optional string f = 4;
+  repeated string bs = 5;
+}

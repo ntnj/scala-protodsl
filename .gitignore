@@ -1,0 +1,12 @@
+target/
+
+.bloop
+.bsp
+.metals
+.vscode
+.idea
+.sbt
+.devcontainer
+metals.sbt
+
+bazel-*

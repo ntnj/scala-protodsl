@@ -1,0 +1,4 @@
+common --lockfile_mode=off
+build --@protobuf//bazel/toolchains:prefer_prebuilt_protoc=true
+build --java_runtime_version=remotejdk_21
+build --tool_java_runtime_version=remotejdk_21

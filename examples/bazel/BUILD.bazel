@@ -1,0 +1,85 @@
+load("@protobuf//bazel:java_proto_library.bzl", "java_proto_library")
+load("@protobuf//bazel:proto_library.bzl", "proto_library")
+load("@rules_scala//scala:providers.bzl", "declare_deps_provider")
+load("@rules_scala//scala:scala.bzl", "scala_binary")
+load("@rules_scala//scala_proto:scala_proto.bzl", "scala_proto_library")
+load(
+    "@rules_scala//scala_proto:scala_proto_toolchain.bzl",
+    "scala_proto_deps_providers",
+    "scala_proto_deps_toolchain",
+    "scala_proto_toolchain",
+)
+
+proto_library(
+    name = "example_proto",
+    srcs = ["example.proto"],
+)
+
+java_proto_library(
+    name = "example_java_proto",
+    deps = [":example_proto"],
+)
+
+scala_proto_library(
+    name = "example_scala_proto",
+    deps = [":example_proto"],
+)
+
+scala_binary(
+    name = "example",
+    srcs = ["Example.scala"],
+    main_class = "example.demo",
+    deps = [
+        ":example_java_proto",
+        ":example_scala_proto",
+    ],
+)
+
+declare_deps_provider(
+    name = "scala_proto_compile_deps",
+    deps_id = "scalapb_compile_deps",
+    deps = [
+        ":example_java_proto",
+        "@protobuf//:protobuf_java",
+        "@rules_scala//scala/private/toolchain_deps:scala_library_classpath",
+    ],
+)
+
+declare_deps_provider(
+    name = "scala_proto_worker_deps",
+    deps_id = "scalapb_worker_deps",
+    deps = [
+        "@maven//:com_github_ntnj_scala_protodsl",
+        "@maven//:com_google_protobuf_protobuf_java",
+        "@maven//:com_thesamet_scalapb_compilerplugin_3",
+        "@maven//:com_thesamet_scalapb_protoc_bridge_3",
+        "@maven//:com_thesamet_scalapb_protoc_gen_3",
+    ],
+)
+
+scala_proto_deps_toolchain(
+    name = "scala_proto_deps_toolchain_impl",
+    dep_providers = scala_proto_deps_providers(
+        compile = ":scala_proto_compile_deps",
+        worker = ":scala_proto_worker_deps",
+    ),
+)
+
+toolchain(
+    name = "scala_proto_deps_toolchain",
+    toolchain = ":scala_proto_deps_toolchain_impl",
+    toolchain_type = "@rules_scala//scala_proto:deps_toolchain_type",
+)
+
+scala_proto_toolchain(
+    name = "scala_proto_toolchain_impl",
+    generators = {
+        "scala": "scalaprotodsl.CodeGenerator",
+    },
+)
+
+toolchain(
+    name = "scala_proto_toolchain",
+    toolchain = ":scala_proto_toolchain_impl",
+    toolchain_type = "@rules_scala//scala_proto:toolchain_type",
+)

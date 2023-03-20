@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package example;
+
+option java_multiple_files = true;
+
+message Person {
+  string name = 1;
+  repeated string emails = 2;
+  map<string, string> attributes = 3;
+}
